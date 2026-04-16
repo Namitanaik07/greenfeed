@@ -1,13 +1,30 @@
-import { useEffect } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import NavBar from '@/components/NavBar';
 import { Trophy, Flame, Target, TrendingUp, QrCode, LogOut, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useEffect, useRef } from "react";
+import { useSmartDustbin } from "@/hooks/useSmartDustbin";
+import { toast } from "@/hooks/use-toast";
+import { Wifi, WifiOff, CheckCircle2 } from "lucide-react";
 
 const Dashboard = () => {
   const { user, profile, signOut, loading } = useAuth();
+  const { logs, latestEvent, isConnected, totalPoints, totalWeightKg } = useSmartDustbin(user?.id ?? null);
+  const prevEvent = useRef<string | null>(null);
+
+  // 🔔 Show notification when new dustbin event arrives
+  useEffect(() => {
+    if (!latestEvent || latestEvent.id === prevEvent.current) return;
+    prevEvent.current = latestEvent.id;
+    const labels: Record<string, string> = { dry: "📦 Dry", wet: "🍃 Wet", recyclable: "♻️ Recyclable", "e-waste": "🔋 E-Waste" };
+    toast({
+      title: `🗑️ Smart Bin — +${latestEvent.points_awarded} pts!`,
+      description: `${labels[latestEvent.waste_type] ?? latestEvent.waste_type} waste · ${latestEvent.weight_grams}g · ${latestEvent.location_name ?? latestEvent.device_id}`,
+    });
+  }, [latestEvent]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -117,12 +134,55 @@ const Dashboard = () => {
         </div>
 
         {/* Recent activity placeholder */}
+        {/* Smart Dustbin Activity */}
         <div className="glass-card rounded-2xl p-8">
-          <h2 className="font-orbitron font-bold text-xl text-foreground mb-6">Recent Activity</h2>
-          <div className="text-center py-12 text-foreground/30">
-            <Leaf className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p>No activity yet. Use a smart dustbin or take an eco action to get started!</p>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-orbitron font-bold text-xl text-foreground flex items-center gap-2">
+              🗑️ Smart Dustbin Activity
+            </h2>
+            <div className={`flex items-center gap-1.5 text-xs font-medium ${isConnected ? "text-green-400" : "text-foreground/30"}`}>
+              {isConnected ? <><Wifi className="w-3.5 h-3.5"/>Live</> : <><WifiOff className="w-3.5 h-3.5"/>Offline</>}
+            </div>
           </div>
+
+          {/* Summary strip */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="bg-primary/10 rounded-xl p-4 text-center">
+              <div className="font-orbitron font-bold text-2xl text-primary">{totalPoints}</div>
+              <div className="text-xs text-foreground/50 mt-1">Points from bins</div>
+            </div>
+            <div className="bg-secondary/10 rounded-xl p-4 text-center">
+              <div className="font-orbitron font-bold text-2xl text-secondary">{totalWeightKg.toFixed(2)} kg</div>
+              <div className="text-xs text-foreground/50 mt-1">Total waste disposed</div>
+            </div>
+          </div>
+
+          {/* Log list */}
+          {logs.length === 0 ? (
+            <div className="text-center py-12 text-foreground/30">
+              <p>No dustbin events yet.</p>
+              <p className="text-xs mt-1">Show your QR at a GreenFeed bin to get started!</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {logs.map(log => {
+                const icons: Record<string, string> = { dry: "📦", wet: "🍃", recyclable: "♻️", "e-waste": "🔋" };
+                return (
+                  <div key={log.id} className="flex items-center gap-3 p-3 rounded-xl bg-muted/10 border border-muted/10">
+                    <span className="text-xl">{icons[log.waste_type] ?? "🗑️"}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-foreground capitalize">{log.waste_type} waste</div>
+                      <div className="text-xs text-foreground/40">{log.weight_grams}g · {log.location_name ?? log.device_id} · {new Date(log.created_at).toLocaleString()}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-orbitron font-bold text-primary">+{log.points_awarded}</div>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-green-400 ml-auto mt-0.5"/>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
       </div>
