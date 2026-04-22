@@ -1,15 +1,21 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/NavBar';
 import NewHeroSection from '@/components/sections/NewHeroSection';
-import SpotIssuesSection from '@/components/sections/SpotIssuesSection';
-import TakeActionSection from '@/components/sections/TakeActionSection';
-import VerificationSection from '@/components/sections/VerificationSection';
-import RewardsSection from '@/components/sections/RewardsSection';
-import ProfileSection from '@/components/sections/ProfileSection';
 import Footer from '@/components/sections/Footer';
 
 const Index = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/home');
+    }
+  }, [user, loading, navigate]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -24,16 +30,13 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  if (loading) return null; // Avoid flashing the landing page while checking auth
+
   return (
-    <div className="min-h-screen bg-background particles-bg overflow-x-hidden">
+    <div className="bg-background overflow-x-hidden">
       <Toaster />
       <NavBar />
       <NewHeroSection />
-      <SpotIssuesSection />
-      <TakeActionSection />
-      <VerificationSection />
-      <RewardsSection />
-      <ProfileSection />
       <Footer />
     </div>
   );

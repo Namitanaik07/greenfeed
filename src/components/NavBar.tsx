@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Leaf, LogOut, LayoutDashboard } from 'lucide-react';
 import { useScrollToSection } from '@/hooks/useScrollToSection';
@@ -25,7 +25,7 @@ const NavBar = () => {
 
   const handleNav = (id: string, route?: string) => {
     if (route) { navigate(route); }
-    else if (location.pathname !== '/') { navigate('/'); setTimeout(() => scrollToSection(id), 300); }
+    else if (location.pathname !== '/home') { navigate('/home'); setTimeout(() => scrollToSection(id), 300); }
     else { scrollToSection(id); }
     setOpen(false);
   };
@@ -38,19 +38,28 @@ const NavBar = () => {
 
   const openAuth = (tab: string) => { setAuthTab(tab); setAuthOpen(true); };
 
+  useEffect(() => {
+    const handleOpenAuth = (e: any) => {
+      setAuthTab(e.detail || 'login');
+      setAuthOpen(true);
+    };
+    window.addEventListener('open-auth', handleOpenAuth);
+    return () => window.removeEventListener('open-auth', handleOpenAuth);
+  }, []);
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-primary/10">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-2">
+          <button onClick={() => navigate(user ? '/home' : '/')} className="flex items-center gap-2">
             <Leaf className="w-7 h-7 text-primary" />
             <span className="font-orbitron font-bold text-lg text-foreground">GreenFeed</span>
           </button>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-6">
-            {links.map(l => (
+            {user && links.map(l => (
               <button key={l.id}
                 onClick={() => handleNav(l.id, 'route' in l ? l.route : undefined)}
                 className="text-sm text-foreground/60 hover:text-primary transition-colors font-medium">
@@ -106,7 +115,7 @@ const NavBar = () => {
         {/* Mobile menu */}
         {open && (
           <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-primary/10 px-4 pb-4 space-y-2">
-            {links.map(l => (
+            {user && links.map(l => (
               <button key={l.id}
                 onClick={() => handleNav(l.id, 'route' in l ? l.route : undefined)}
                 className="block w-full text-left py-3 px-4 text-foreground/70 hover:text-primary hover:bg-primary/5 rounded-lg text-sm">
