@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 import { useSmartDustbin } from "@/hooks/useSmartDustbin";
 import { toast } from "@/hooks/use-toast";
 import { Wifi, WifiOff, CheckCircle2 } from "lucide-react";
+import { TaskSection } from '@/components/sections/TaskSection';
 
 const Dashboard = () => {
   const { user, profile, signOut, loading } = useAuth();
@@ -57,7 +58,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background particles-bg">
+    <div className="bg-background">
       <NavBar />
 
       <div className="container mx-auto px-4 pt-24 pb-16 max-w-5xl">
@@ -131,6 +132,11 @@ const Dashboard = () => {
           ) : (
             <div className="text-foreground/30 py-8">Generating QR code…</div>
           )}
+        </div>
+
+        {/* Tasks Section */}
+        <div className="mb-8">
+          <TaskSection />
         </div>
 
         {/* Recent activity placeholder */}

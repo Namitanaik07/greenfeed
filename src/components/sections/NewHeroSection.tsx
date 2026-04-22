@@ -1,113 +1,86 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Eye, Zap, Gift, ChevronDown } from 'lucide-react';
+import { ArrowRight, Leaf, BarChart3, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useScrollToSection } from '@/hooks/useScrollToSection';
 
 const NewHeroSection = () => {
   const scrollToSection = useScrollToSection();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-      {/* Animated background */}
+    <section className="relative min-h-screen flex items-center justify-center px-4 bg-slate-50 overflow-hidden">
+      {/* Formal Greeny White Background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-[10%] w-72 h-72 rounded-full bg-primary/10 blur-[100px] animate-float" />
-        <div className="absolute bottom-20 right-[10%] w-96 h-96 rounded-full bg-secondary/10 blur-[120px] animate-float" style={{ animationDelay: '3s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent/5 blur-[150px]" />
+        {/* Soft green gradient blob top left */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] rounded-full bg-emerald-100/60 blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+        {/* Soft green gradient blob bottom right */}
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full bg-emerald-50/80 blur-[120px] translate-x-1/3 translate-y-1/3" />
       </div>
 
-      <div className="container mx-auto relative z-10 text-center max-w-5xl">
+      <div className="container mx-auto relative z-10 text-center max-w-5xl py-20">
         <div className="space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-card text-sm animate-scale-in">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-foreground/80">Smart Waste Management Platform</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-emerald-200 text-emerald-800 text-sm font-medium shadow-sm animate-scale-in">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>Academic IoT Initiative</span>
           </div>
 
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-orbitron font-black leading-tight animate-slide-up">
-            Turn{' '}
-            <span className="text-glow bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Actions
-            </span>{' '}
-            into Impact
-            <br />
-            <span className="text-glow-accent bg-gradient-to-r from-accent to-accent-solar bg-clip-text text-transparent">
-              Earn Rewards
-            </span>{' '}
-            for Saving the Environment
+          {/* Formal Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-inter font-extrabold tracking-tight text-slate-900 leading-tight animate-slide-up">
+            Intelligent Waste Management <br className="hidden sm:block" />
+            <span className="text-emerald-600">for Sustainable Cities</span>
           </h1>
 
-          {/* Description */}
-          <p className="text-lg lg:text-xl text-foreground/60 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            Spot environmental problems around you, take real action to fix them, 
-            upload geo-tagged proof, get verified, and earn exciting rewards.
+          {/* Formal Description */}
+          <p className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            GreenFeed is an advanced socio-technical platform bridging community engagement with IoT technology. We optimize waste disposal protocols, verify civic action through automated heuristics, and incentivize eco-friendly practices.
           </p>
 
-          {/* 3 Action Buttons */}
+          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <Button
               size="lg"
-              className="bg-gradient-primary text-primary-foreground font-semibold px-8 py-6 rounded-xl glow-primary group text-base"
-              onClick={() => scrollToSection('spot-issues')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-6 rounded-xl shadow-md transition-all text-base"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-auth', { detail: 'login' }))}
             >
-              <Eye className="w-5 h-5 mr-2" />
-              Spot Environmental Issues
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-secondary to-primary text-primary-foreground font-semibold px-8 py-6 rounded-xl glow-secondary group text-base"
-              onClick={() => scrollToSection('take-action')}
-            >
-              <Zap className="w-5 h-5 mr-2" />
-              Take Eco Action
+              Get Started
+              <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
 
             <Button
               size="lg"
               variant="outline"
-              className="border-accent/50 text-accent font-semibold px-8 py-6 rounded-xl hover-glow group text-base"
-              onClick={() => scrollToSection('rewards')}
+              className="border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold px-8 py-6 rounded-xl transition-all text-base"
+              onClick={() => scrollToSection('how-it-works')}
             >
-              <Gift className="w-5 h-5 mr-2" />
-              Share & Get Rewards
+              <BarChart3 className="w-5 h-5 mr-2 text-emerald-600" />
+              View Architecture
             </Button>
           </div>
 
-          {/* How it works mini */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 animate-slide-up" style={{ animationDelay: '0.6s' }}>
+          {/* Formal Features Mini */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-16 animate-slide-up" style={{ animationDelay: '0.6s' }}>
             {[
-              { step: '01', title: 'Upload Proof', desc: 'Take a geo-tagged photo of your eco action', icon: '📸' },
-              { step: '02', title: 'Get Verified', desc: 'AI + location verification validates your work', icon: '✅' },
-              { step: '03', title: 'Earn Rewards', desc: 'Get points, badges, and real-world rewards', icon: '🎁' },
-            ].map((item) => (
-              <div key={item.step} className="glass-card p-6 rounded-2xl hover-lift text-center">
-                <div className="text-4xl mb-3">{item.icon}</div>
-                <div className="text-xs font-orbitron text-primary mb-2">STEP {item.step}</div>
-                <h3 className="text-lg font-orbitron font-bold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-foreground/60">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Get Started CTA */}
-          <div className="pt-8 animate-slide-up" style={{ animationDelay: '0.8s' }}>
-            <Button
-              size="lg"
-              className="bg-gradient-primary text-primary-foreground font-bold px-12 py-6 rounded-2xl glow-primary text-lg neon-border"
-              onClick={() => scrollToSection('spot-issues')}
-            >
-              Get Started
-              <ArrowRight className="w-6 h-6 ml-2" />
-            </Button>
+              { title: 'Civic Reporting', desc: 'Geo-tagged infrastructure monitoring and issue tracking.', icon: Leaf },
+              { title: 'IoT Integration', desc: 'Smart bins equipped with automated classification algorithms.', icon: BarChart3 },
+              { title: 'Verified Impact', desc: 'Data-driven validation of community environmental actions.', icon: ShieldCheck },
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left hover:shadow-md transition-shadow">
+                  <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-inter font-bold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <ChevronDown className="w-8 h-8 text-primary/60" />
+        <ChevronDown className="w-8 h-8 text-slate-400" />
       </div>
     </section>
   );

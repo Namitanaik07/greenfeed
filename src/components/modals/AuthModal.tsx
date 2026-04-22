@@ -16,12 +16,17 @@ interface AuthModalProps {
 }
 
 const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) => {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
 
   const [loginForm,  setLoginForm]  = useState({ email: '', password: '' });
   const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '' });
+  const [resetForm,  setResetForm]  = useState({ email: '' });
   const [isLoading,  setIsLoading]  = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+
+  // Reset state when modal opens/closes
+  if (!isOpen && isForgotPassword) setIsForgotPassword(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +38,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     } else {
       toast({ title: '🌱 Welcome back!', description: 'Logged in successfully.' });
       onClose();
-      navigate('/dashboard');
+      navigate('/home');
     }
   };
 
@@ -47,7 +52,20 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     } else {
       toast({ title: '🎉 Welcome to GreenFeed!', description: 'Account created! You can now log in.' });
       onClose();
-      navigate('/dashboard');
+      navigate('/home');
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const { error } = await resetPassword(resetForm.email);
+    setIsLoading(false);
+    if (error) {
+      toast({ title: '❌ Reset failed', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: '📧 Email sent', description: 'Check your email for the password reset link.' });
+      setIsForgotPassword(false);
     }
   };
 
@@ -68,30 +86,59 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
             <TabsTrigger value="signup" className="data-[state=active]:bg-primary data-[state=active]:text-white">Sign Up</TabsTrigger>
           </TabsList>
 
-          {/* LOGIN */}
+          {/* LOGIN / RESET PASSWORD */}
           <TabsContent value="login" className="space-y-4 mt-4">
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email</Label>
-                <Input type="email" placeholder="you@example.com" required
-                  value={loginForm.email}
-                  onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
-                  className="glass-card border-primary/30 focus:border-primary" />
-              </div>
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Lock className="w-4 h-4" /> Password</Label>
-                <Input type="password" placeholder="••••••••" required
-                  value={loginForm.password}
-                  onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="glass-card border-primary/30 focus:border-primary" />
-              </div>
-              <Button type="submit" disabled={isLoading}
-                className="w-full bg-gradient-primary text-white font-semibold py-3 rounded-xl">
-                {isLoading
-                  ? <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Logging in...</span>
-                  : <><User className="w-4 h-4 mr-2" />Login to GreenFeed</>}
-              </Button>
-            </form>
+            {isForgotPassword ? (
+              <form onSubmit={handleResetPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email Address</Label>
+                  <p className="text-sm text-foreground/70 mb-2">We will send you an email with a link to reset your password.</p>
+                  <Input type="email" placeholder="you@example.com" required
+                    value={resetForm.email}
+                    onChange={e => setResetForm({ ...resetForm, email: e.target.value })}
+                    className="glass-card border-primary/30 focus:border-primary" />
+                </div>
+                <Button type="submit" disabled={isLoading}
+                  className="w-full bg-gradient-primary text-white font-semibold py-3 rounded-xl">
+                  {isLoading
+                    ? <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending email...</span>
+                    : <><Mail className="w-4 h-4 mr-2" />Send Reset Link</>}
+                </Button>
+                <div className="text-center mt-2">
+                  <button type="button" onClick={() => setIsForgotPassword(false)} className="text-sm text-foreground/60 hover:text-primary transition-colors">
+                    Back to Login
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email</Label>
+                  <Input type="email" placeholder="you@example.com" required
+                    value={loginForm.email}
+                    onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
+                    className="glass-card border-primary/30 focus:border-primary" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="flex items-center gap-2"><Lock className="w-4 h-4" /> Password</Label>
+                    <button type="button" onClick={() => setIsForgotPassword(true)} className="text-xs text-primary hover:underline">
+                      Forgot Password?
+                    </button>
+                  </div>
+                  <Input type="password" placeholder="••••••••" required
+                    value={loginForm.password}
+                    onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                    className="glass-card border-primary/30 focus:border-primary" />
+                </div>
+                <Button type="submit" disabled={isLoading}
+                  className="w-full bg-gradient-primary text-white font-semibold py-3 rounded-xl">
+                  {isLoading
+                    ? <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Logging in...</span>
+                    : <><User className="w-4 h-4 mr-2" />Login to GreenFeed</>}
+                </Button>
+              </form>
+            )}
           </TabsContent>
 
           {/* SIGNUP */}
