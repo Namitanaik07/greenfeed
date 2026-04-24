@@ -75,7 +75,7 @@ const UserDashboardSection = () => {
         onClose={() => setIsAuthModalOpen(false)} 
         defaultTab="login"
       />
-      <section id="user-dashboard" className="py-24 px-4 bg-background-secondary">
+      <section id="user-dashboard" className="py-24 px-4 ">
       <div className="container mx-auto">
         <div className="text-center mb-16 fade-in">
           <h2 className="text-4xl lg:text-6xl font-orbitron font-bold mb-6">

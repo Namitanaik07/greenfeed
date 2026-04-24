@@ -56,7 +56,7 @@ const VerificationSection = () => {
   const impactScore = Math.round(impactBreakdown.workDone * impactBreakdown.difficulty * impactBreakdown.areaImportance * impactBreakdown.verificationScore * 100);
 
   return (
-    <section id="verification" className="py-24 px-4 bg-background-secondary">
+    <section id="verification" className="py-24 px-4 ">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-16 fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-sm mb-6">

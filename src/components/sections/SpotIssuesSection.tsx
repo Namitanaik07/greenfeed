@@ -40,7 +40,7 @@ const SpotIssuesSection = () => {
   };
 
   return (
-    <section id="spot-issues" className="py-24 px-4 bg-background-secondary">
+    <section id="spot-issues" className="py-24 px-4 ">
       <div className="container mx-auto">
         <div className="text-center mb-16 fade-in">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-sm mb-6">

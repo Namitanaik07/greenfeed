@@ -1,32 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Leaf, LogOut, LayoutDashboard } from 'lucide-react';
-import { useScrollToSection } from '@/hooks/useScrollToSection';
+import { Menu, X, Leaf, LogOut, LayoutDashboard, Rss, Trophy, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/modals/AuthModal';
 import { toast } from '@/hooks/use-toast';
 
 const links = [
-  { label: 'Spot Issues',  id: 'spot-issues' },
-  { label: 'Take Action',  id: 'take-action' },
-  { label: 'Rewards',      id: 'rewards' },
-  { label: 'Heatmap',      id: 'heatmap', route: '/heatmap' },
+  { label: 'Feed',         route: '/feed' },
+  { label: 'Spot Issues',  route: '/spot-issues' },
+  { label: 'Take Action',  route: '/take-action' },
+  { label: 'Rewards',      route: '/rewards' },
+  { label: 'Heatmap',      route: '/heatmap' },
+  { label: 'Leaderboard',  route: '/leaderboard' },
 ] as const;
 
 const NavBar = () => {
   const [open,      setOpen]      = useState(false);
   const [authOpen,  setAuthOpen]  = useState(false);
   const [authTab,   setAuthTab]   = useState('login');
-  const scrollToSection = useScrollToSection();
   const navigate  = useNavigate();
   const location  = useLocation();
   const { user, profile, signOut } = useAuth();
 
-  const handleNav = (id: string, route?: string) => {
-    if (route) { navigate(route); }
-    else if (location.pathname !== '/home') { navigate('/home'); setTimeout(() => scrollToSection(id), 300); }
-    else { scrollToSection(id); }
+  const handleNav = (route: string) => {
+    navigate(route);
     setOpen(false);
   };
 
@@ -54,15 +52,19 @@ const NavBar = () => {
           {/* Logo */}
           <button onClick={() => navigate(user ? '/home' : '/')} className="flex items-center gap-2">
             <Leaf className="w-7 h-7 text-primary" />
-            <span className="font-orbitron font-bold text-lg text-foreground">GreenFeed</span>
+            <span className="font-inter font-bold text-lg text-foreground">GreenFeed</span>
           </button>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-5">
             {user && links.map(l => (
-              <button key={l.id}
-                onClick={() => handleNav(l.id, 'route' in l ? l.route : undefined)}
-                className="text-sm text-foreground/60 hover:text-primary transition-colors font-medium">
+              <button key={l.route}
+                onClick={() => handleNav(l.route)}
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === l.route
+                    ? 'text-primary'
+                    : 'text-foreground/60 hover:text-primary'
+                }`}>
                 {l.label}
               </button>
             ))}
@@ -72,7 +74,7 @@ const NavBar = () => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <>
-                <button onClick={() => navigate('/dashboard')}
+                <button onClick={() => navigate('/profile')}
                   className="flex items-center gap-2 text-sm text-foreground/70 hover:text-primary transition-colors">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold">
                     {profile?.full_name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? 'U'}
@@ -98,7 +100,7 @@ const NavBar = () => {
                   Login
                 </Button>
                 <Button size="sm"
-                  className="bg-gradient-primary text-white font-semibold rounded-lg"
+                  className="bg-primary text-white font-semibold rounded-lg"
                   onClick={() => openAuth('signup')}>
                   Sign Up
                 </Button>
@@ -116,14 +118,21 @@ const NavBar = () => {
         {open && (
           <div className="md:hidden bg-background/95 backdrop-blur-xl border-b border-primary/10 px-4 pb-4 space-y-2">
             {user && links.map(l => (
-              <button key={l.id}
-                onClick={() => handleNav(l.id, 'route' in l ? l.route : undefined)}
-                className="block w-full text-left py-3 px-4 text-foreground/70 hover:text-primary hover:bg-primary/5 rounded-lg text-sm">
+              <button key={l.route}
+                onClick={() => handleNav(l.route)}
+                className={`block w-full text-left py-3 px-4 rounded-lg text-sm ${
+                  location.pathname === l.route
+                    ? 'text-primary bg-primary/5 font-semibold'
+                    : 'text-foreground/70 hover:text-primary hover:bg-primary/5'
+                }`}>
                 {l.label}
               </button>
             ))}
             {user ? (
               <>
+                <Button className="w-full" variant="outline" onClick={() => { navigate('/profile'); setOpen(false); }}>
+                  <User className="w-4 h-4 mr-2" /> Profile
+                </Button>
                 <Button className="w-full" variant="outline" onClick={() => { navigate('/dashboard'); setOpen(false); }}>
                   <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
                 </Button>
@@ -134,7 +143,7 @@ const NavBar = () => {
             ) : (
               <>
                 <Button className="w-full" variant="outline" onClick={() => { openAuth('login'); setOpen(false); }}>Login</Button>
-                <Button className="w-full bg-gradient-primary text-white" onClick={() => { openAuth('signup'); setOpen(false); }}>Sign Up</Button>
+                <Button className="w-full bg-primary text-white" onClick={() => { openAuth('signup'); setOpen(false); }}>Sign Up</Button>
               </>
             )}
           </div>

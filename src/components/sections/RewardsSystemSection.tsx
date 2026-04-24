@@ -50,7 +50,7 @@ const RewardsSystemSection = () => {
         isOpen={isProgressModalOpen} 
         onClose={() => setIsProgressModalOpen(false)} 
       />
-      <section id="rewards" className="py-24 px-4 bg-background-secondary">
+      <section id="rewards" className="py-24 px-4 ">
       <div className="container mx-auto">
         <div className="text-center mb-16 fade-in">
           <h2 className="text-4xl lg:text-6xl font-orbitron font-bold mb-6">
