@@ -6,62 +6,62 @@
 @layer base {
   :root {
     /* Clean Light Green & White Palette */
-    --background: 140 40% 98%;  /* Very soft mint green background */
-    --foreground: 160 20% 15%;  /* Dark grey/green for text */
+    --background: 200 100% 94%;  /* DFF5FF fallback */
+    --foreground: 215 28% 17%;  /* Primary Text #1F2937 */
     --background-secondary: 0 0% 100%; /* Pure white */
     
     --card: 0 0% 100%; /* Pure white cards */
-    --card-foreground: 160 20% 15%;
+    --card-foreground: 215 28% 17%;
     --card-glass: 0 0% 100% / 0.85; 
     
     --popover: 0 0% 100%;
-    --popover-foreground: 160 20% 15%;
+    --popover-foreground: 215 28% 17%;
     
-    /* Primary: Bright Fresh Green */
-    --primary: 142 70% 45%; 
+    /* Primary: Eco Green */
+    --primary: 122 39% 49%; 
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 142 70% 60%;
+    --primary-glow: 122 39% 60%;
     
-    /* Secondary: Soft Orange/Coral (from image accents) */
-    --secondary: 16 100% 65%; 
+    /* Secondary: Ocean Blue */
+    --secondary: 206 97% 61%; 
     --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 16 100% 75%;
+    --secondary-glow: 206 97% 75%;
     
-    /* Accent: Soft Light Green for tags/highlights */
-    --accent: 142 50% 90%; 
-    --accent-foreground: 142 70% 30%;
-    --accent-solar: 16 100% 65%;
+    /* Accent: Sun Glow */
+    --accent: 51 100% 92%; 
+    --accent-foreground: 215 28% 17%;
+    --accent-solar: 51 100% 65%;
     
-    --muted: 140 20% 94%;
-    --muted-foreground: 160 10% 50%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%; /* Secondary Text #6B7280 */
     
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 140 20% 90%;
-    --input: 140 20% 94%;
-    --ring: 142 70% 45%;
+    --border: 131 68% 89%; /* CFF5D6 */
+    --input: 131 68% 89%;
+    --ring: 122 39% 49%;
     
-    --radius: 1.5rem; /* Rounded corners from design */
+    --radius: 1rem; /* 16px Rounded corners */
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(142 70% 45%), hsl(142 60% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(16 100% 65%), hsl(24 100% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(140 40% 98%), hsl(142 50% 90%));
+    --gradient-primary: linear-gradient(135deg, hsl(122 39% 49%), hsl(122 35% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(206 97% 61%), hsl(206 90% 65%));
+    --gradient-hero: linear-gradient(135deg, #DFF5FF, #E8FBEA);
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(0 0% 98%));
     
     /* Shadows & Glows */
-    --shadow-glow: 0 10px 25px -5px hsl(142 70% 45% / 0.3);
-    --shadow-glow-secondary: 0 10px 25px -5px hsl(16 100% 65% / 0.3);
-    --shadow-glow-accent: 0 10px 25px -5px hsl(142 50% 90% / 0.5);
-    --shadow-elegant: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+    --shadow-glow: 0 10px 25px -5px hsl(122 39% 49% / 0.3);
+    --shadow-glow-secondary: 0 10px 25px -5px hsl(206 97% 61% / 0.3);
+    --shadow-glow-accent: 0 10px 25px -5px hsl(51 100% 92% / 0.5);
+    --shadow-elegant: 0 4px 20px rgba(0, 0, 0, 0.05);
     
     /* Animations */
     --transition-glow: all 0.3s ease;
-    --transition-smooth: all 0.3s ease;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 160 20% 15%;
+    --sidebar-foreground: 215 28% 17%;
     --sidebar-primary: 142 70% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 140 20% 94%;
@@ -72,26 +72,26 @@
 
   /* Force light theme colors for dark mode to maintain the requested clean white/green design */
   .dark {
-    --background: 140 40% 98%;
-    --foreground: 160 20% 15%;
+    --background: 200 100% 94%;
+    --foreground: 215 28% 17%;
     --background-secondary: 0 0% 100%;
     --card: 0 0% 100%;
-    --card-foreground: 160 20% 15%;
+    --card-foreground: 215 28% 17%;
     --popover: 0 0% 100%;
-    --popover-foreground: 160 20% 15%;
-    --primary: 142 70% 45%;
+    --popover-foreground: 215 28% 17%;
+    --primary: 122 39% 49%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 16 100% 65%;
+    --secondary: 206 97% 61%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 140 20% 94%;
-    --muted-foreground: 160 10% 50%;
-    --accent: 142 50% 90%;
-    --accent-foreground: 142 70% 30%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 51 100% 92%;
+    --accent-foreground: 215 28% 17%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 140 20% 90%;
-    --input: 140 20% 94%;
-    --ring: 142 70% 45%;
+    --border: 131 68% 89%;
+    --input: 131 68% 89%;
+    --ring: 122 39% 49%;
   }
 }
 
@@ -101,7 +101,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-['Inter'];
+    @apply text-foreground font-['Inter'];
+    background: linear-gradient(135deg, #DFF5FF, #E8FBEA);
+    min-height: 100vh;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -113,12 +115,13 @@
 @layer components {
   /* Clean Cards */
   .glass-card {
-    @apply bg-white border border-slate-100 shadow-sm rounded-3xl;
+    @apply bg-white border border-[#CFF5D6] rounded-[16px];
     box-shadow: var(--shadow-elegant);
   }
   
   .glass-card-accent {
-    @apply bg-emerald-50 border border-emerald-100 rounded-3xl;
+    @apply bg-[#FFF9D6] border border-[#CFF5D6] rounded-[16px];
+    box-shadow: var(--shadow-elegant);
   }
   
   /* Buttons */
@@ -160,12 +163,12 @@
   
   /* Interactive Hover States */
   .hover-lift {
-    transition: var(--transition-smooth);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-elegant);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
   }
   
   .neon-border {

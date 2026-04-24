@@ -16,7 +16,7 @@ const ProfileSection = () => {
   const { toast } = useToast();
 
   return (
-    <section id="profile" className="py-24 px-4 bg-background-secondary">
+    <section id="profile" className="py-24 px-4 ">
       <div className="container mx-auto">
         <div className="text-center mb-16 fade-in">
           <h2 className="text-3xl lg:text-5xl font-orbitron font-bold mb-4">

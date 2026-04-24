@@ -27,7 +27,7 @@ const HardwarePhase2Section = () => {
   ];
 
   return (
-    <section className="py-24 px-4 bg-background-secondary">
+    <section className="py-24 px-4 ">
       <div className="container mx-auto">
         <div className="text-center mb-16 fade-in">
           <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card text-sm mb-6">

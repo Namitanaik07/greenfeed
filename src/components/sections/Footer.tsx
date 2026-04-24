@@ -40,7 +40,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-background-secondary border-t border-primary/20">
+    <footer className=" border-t border-primary/20">
       <div className="container mx-auto px-4 py-16">
         {/* Main Footer Content */}
         <div className="grid lg:grid-cols-5 gap-12 mb-12">

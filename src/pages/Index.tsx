@@ -4,6 +4,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/NavBar';
 import NewHeroSection from '@/components/sections/NewHeroSection';
+import FeaturesSection from '@/components/sections/FeaturesSection';
+import ProblemSection from '@/components/sections/ProblemSection';
+import SolutionSection from '@/components/sections/SolutionSection';
+import HowItWorksSection from '@/components/sections/HowItWorksSection';
+import HardwarePhase1Section from '@/components/sections/HardwarePhase1Section';
+import HardwarePhase2Section from '@/components/sections/HardwarePhase2Section';
+import CTASection from '@/components/sections/CTASection';
 import Footer from '@/components/sections/Footer';
 
 const Index = () => {
@@ -30,13 +37,20 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
-  if (loading) return null; // Avoid flashing the landing page while checking auth
+  if (loading) return null;
 
   return (
-    <div className="bg-background overflow-x-hidden">
+    <div className="overflow-x-hidden">
       <Toaster />
       <NavBar />
       <NewHeroSection />
+      <FeaturesSection />
+      <ProblemSection />
+      <SolutionSection />
+      <HowItWorksSection />
+      <HardwarePhase1Section />
+      <HardwarePhase2Section />
+      <CTASection />
       <Footer />
     </div>
   );
