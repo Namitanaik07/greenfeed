@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Clean Light Green & White Palette */
+    --background: 200 100% 94%;  /* DFF5FF fallback */
+    --foreground: 215 28% 17%;  /* Primary Text #1F2937 */
+    --background-secondary: 0 0% 100%; /* Pure white */
+    
+    --card: 0 0% 100%; /* Pure white cards */
+    --card-foreground: 215 28% 17%;
+    --card-glass: 0 0% 100% / 0.85; 
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+    
+    /* Primary: Eco Green */
+    --primary: 122 39% 49%; 
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 122 39% 60%;
+    
+    /* Secondary: Ocean Blue */
+    --secondary: 206 97% 61%; 
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 206 97% 75%;
+    
+    /* Accent: Sun Glow */
+    --accent: 51 100% 92%; 
+    --accent-foreground: 215 28% 17%;
+    --accent-solar: 51 100% 65%;
+    
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%; /* Secondary Text #6B7280 */
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 131 68% 89%; /* CFF5D6 */
+    --input: 131 68% 89%;
+    --ring: 122 39% 49%;
+    
+    --radius: 1rem; /* 16px Rounded corners */
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(122 39% 49%), hsl(122 35% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(206 97% 61%), hsl(206 90% 65%));
+    --gradient-hero: linear-gradient(135deg, #DFF5FF, #E8FBEA);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    
+    /* Shadows & Glows */
+    --shadow-glow: 0 10px 25px -5px hsl(122 39% 49% / 0.3);
+    --shadow-glow-secondary: 0 10px 25px -5px hsl(206 97% 61% / 0.3);
+    --shadow-glow-accent: 0 10px 25px -5px hsl(51 100% 92% / 0.5);
+    --shadow-elegant: 0 4px 20px rgba(0, 0, 0, 0.05);
+    
+    /* Animations */
+    --transition-glow: all 0.3s ease;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 28% 17%;
+    --sidebar-primary: 142 70% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 140 20% 94%;
+    --sidebar-accent-foreground: 160 20% 15%;
+    --sidebar-border: 140 20% 90%;
+    --sidebar-ring: 142 70% 45%;
+  }
+
+  /* Force light theme colors for dark mode to maintain the requested clean white/green design */
+  .dark {
+    --background: 200 100% 94%;
+    --foreground: 215 28% 17%;
+    --background-secondary: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+    --primary: 122 39% 49%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 206 97% 61%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 51 100% 92%;
+    --accent-foreground: 215 28% 17%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 131 68% 89%;
+    --input: 131 68% 89%;
+    --ring: 122 39% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground font-['Inter'];
+    background: linear-gradient(135deg, #DFF5FF, #E8FBEA);
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    /* Changing heading font to Inter for a cleaner look matching the image */
+    @apply font-['Inter'] tracking-tight; 
+  }
+}
+
+@layer components {
+  /* Clean Cards */
+  .glass-card {
+    @apply bg-white border border-[#CFF5D6] rounded-[16px];
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .glass-card-accent {
+    @apply bg-[#FFF9D6] border border-[#CFF5D6] rounded-[16px];
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  /* Buttons */
+  .glow-primary {
+    box-shadow: var(--shadow-glow);
+    transition: var(--transition-glow);
+  }
+  
+  .glow-primary:hover {
+    box-shadow: 0 15px 30px -5px hsl(var(--primary) / 0.4);
+    transform: translateY(-2px);
+  }
+  
+  .glow-secondary {
+    box-shadow: var(--shadow-glow-secondary);
+    transition: var(--transition-glow);
+  }
+  
+  .glow-secondary:hover {
+    box-shadow: 0 15px 30px -5px hsl(var(--secondary) / 0.4);
+    transform: translateY(-2px);
+  }
+  
+  /* Text Highlights */
+  .text-glow {
+    text-shadow: none; /* Removed neon glow for a cleaner design */
+  }
+  
+  /* Gradients */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  /* Clean Backgrounds - removing particles for this design */
+  .particles-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Interactive Hover States */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  }
+  
+  .neon-border {
+    border: 2px solid transparent;
+    border-radius: 1.5rem;
+    background-image: linear-gradient(white, white), var(--gradient-primary);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+  }
+  
+  /* Scroll Animations */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .slide-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .slide-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .slide-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .slide-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
