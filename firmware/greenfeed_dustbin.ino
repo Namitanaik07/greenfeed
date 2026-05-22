@@ -8,7 +8,7 @@
 #define WIFI_SSID        "YOUR_WIFI_NAME"
 #define WIFI_PASSWORD    "YOUR_WIFI_PASSWORD"
 #define DEVICE_ID        "BIN_001"
-#define BIN_API_KEY      "paste-api_key-from-smart_dustbins-table"
+#define BIN_API_KEY      "YOUR_BIN_API_KEY"
 #define API_ENDPOINT     "https://hbqzmciruusgqwxrjfus.supabase.co/functions/v1/iot-dustbin"
 #define WASTE_TYPE       "dry"        // dry | recyclable | e-waste | wet
 #define BIN_LATITUDE     12.2958

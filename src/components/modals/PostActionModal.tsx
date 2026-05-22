@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +26,7 @@ const PostActionModal = ({ isOpen, onClose }: PostActionModalProps) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const actionCategories = [
     { id: 'trees', name: 'Tree Planting', icon: TreePine, points: '50-200', color: 'from-green-500 to-emerald-600' },
@@ -115,6 +116,20 @@ const PostActionModal = ({ isOpen, onClose }: PostActionModalProps) => {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Hidden camera input */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={(e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) handleImageUpload(file);
+              e.target.value = '';
+            }}
+          />
+
           {/* Geo-Tagged Photo Upload */}
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
@@ -169,18 +184,7 @@ const PostActionModal = ({ isOpen, onClose }: PostActionModalProps) => {
                   <Button 
                     type="button" 
                     variant="outline"
-                    onClick={() => {
-                      // This would trigger camera with location access
-                      const input = document.createElement('input');
-                      input.type = 'file';
-                      input.accept = 'image/*';
-                      input.capture = 'environment';
-                      input.onchange = (e) => {
-                        const file = (e.target as HTMLInputElement).files?.[0];
-                        if (file) handleImageUpload(file);
-                      };
-                      input.click();
-                    }}
+                    onClick={() => cameraInputRef.current?.click()}
                   >
                     <Camera className="w-4 h-4 mr-2" />
                     Take Photo with Location

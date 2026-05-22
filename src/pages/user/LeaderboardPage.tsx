@@ -6,7 +6,6 @@ import NavBar from '@/components/NavBar';
 import { Trophy, Medal, Flame, Crown, Leaf, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { leaderboardData } from '@/data/mockTasks';
 
 interface LeaderEntry {
   rank: number;
@@ -41,32 +40,24 @@ const LeaderboardPage = () => {
       try {
         const { data, error } = await supabase
           .from('profiles')
-          .select('id, full_name, total_points, eco_score, level')
+          .select('id, full_name, username, total_points, eco_score, level')
           .order('total_points', { ascending: false })
           .limit(100);
 
         if (error) throw error;
-        if (data && data.length > 3) {
+        if (data) {
           const mapped: LeaderEntry[] = data.map((p: any, i: number) => ({
             rank: i + 1,
-            name: p.full_name ?? 'Anonymous',
+            name: p.id === user?.id ? 'You' : (p.full_name || p.username || 'Anonymous'),
             points: p.total_points ?? 0,
             level: p.level ?? 'Beginner',
             tasks: 0,
             isYou: p.id === user?.id,
           }));
           setEntries(mapped);
-        } else {
-          // Use mock + inject current user
-          const mock = leaderboardData.map(e => ({
-            ...e,
-            isYou: e.name === 'You',
-          }));
-          setEntries(mock);
         }
       } catch {
-        const mock = leaderboardData.map(e => ({ ...e, isYou: e.name === 'You' }));
-        setEntries(mock);
+        setEntries([]);
       } finally {
         setLoading(false);
       }

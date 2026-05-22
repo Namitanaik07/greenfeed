@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { User, Trophy, Flame, Target, Bell, Star, TrendingUp, Medal } from 'lucide-react';
-import { mockUser, leaderboardData } from '@/data/mockTasks';
+import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const notifications = [
   { id: 1, text: 'Your task "Central Park Cleanup" was verified! +50 pts', time: '2h ago', read: false },
@@ -11,9 +13,45 @@ const notifications = [
   { id: 4, text: 'Leaderboard updated — you moved up 2 ranks!', time: '2d ago', read: true },
 ];
 
+interface LeaderEntry {
+  rank: number;
+  name: string;
+  points: number;
+  level: string;
+  tasks: number;
+}
+
 const ProfileSection = () => {
-  const user = mockUser;
+  const { profile, user: authUser } = useAuth();
   const { toast } = useToast();
+  const [leaderboardData, setLeaderboardData] = useState<LeaderEntry[]>([]);
+
+  const userName = profile?.full_name || profile?.username || 'Eco Warrior';
+  const userLevel = profile?.level || 'Beginner';
+  const userPoints = profile?.total_points || 0;
+  const userStreak = profile?.streak_days || 0;
+  const userImpact = profile?.eco_score || 0;
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, full_name, username, total_points, level, eco_score')
+        .order('total_points', { ascending: false })
+        .limit(10);
+
+      if (data) {
+        setLeaderboardData(data.map((p, i) => ({
+          rank: i + 1,
+          name: p.id === authUser?.id ? 'You' : (p.full_name || p.username || 'Anonymous'),
+          points: p.total_points || 0,
+          level: p.level || 'Beginner',
+          tasks: 0,
+        })));
+      }
+    };
+    fetchLeaderboard();
+  }, [authUser?.id]);
 
   return (
     <section id="profile" className="py-24 px-4 ">
@@ -31,37 +69,35 @@ const ProfileSection = () => {
               <div className="w-20 h-20 rounded-full bg-gradient-primary mx-auto flex items-center justify-center mb-4">
                 <User className="w-10 h-10 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-orbitron font-bold text-foreground">{user.name}</h3>
-              <Badge className="mt-2 bg-primary/20 text-primary border-primary/30">{user.level}</Badge>
+              <h3 className="text-xl font-orbitron font-bold text-foreground">{userName}</h3>
+              <Badge className="mt-2 bg-primary/20 text-primary border-primary/30">{userLevel}</Badge>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
                 <span className="flex items-center gap-2 text-sm text-foreground/70"><Trophy className="w-4 h-4 text-accent-solar" /> Points</span>
-                <span className="font-orbitron font-bold text-foreground">{user.totalPoints}</span>
+                <span className="font-orbitron font-bold text-foreground">{userPoints}</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
                 <span className="flex items-center gap-2 text-sm text-foreground/70"><Target className="w-4 h-4 text-secondary" /> Tasks</span>
-                <span className="font-orbitron font-bold text-foreground">{user.tasksCompleted}</span>
+                <span className="font-orbitron font-bold text-foreground">0</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
                 <span className="flex items-center gap-2 text-sm text-foreground/70"><Flame className="w-4 h-4 text-accent-solar" /> Streak</span>
-                <span className="font-orbitron font-bold text-foreground">{user.streak} days 🔥</span>
+                <span className="font-orbitron font-bold text-foreground">{userStreak} days 🔥</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
                 <span className="flex items-center gap-2 text-sm text-foreground/70"><TrendingUp className="w-4 h-4 text-primary" /> Impact</span>
-                <span className="font-orbitron font-bold text-foreground">{user.impactScore}</span>
+                <span className="font-orbitron font-bold text-foreground">{userImpact}</span>
               </div>
             </div>
 
             <div className="mt-6">
-              <p className="text-xs text-foreground/50 mb-2">Badges</p>
+              <p className="text-xs text-foreground/50 mb-2">Level</p>
               <div className="flex flex-wrap gap-1.5">
-                {user.badges.map((b) => (
-                  <Badge key={b} variant="outline" className="text-[10px] border-primary/20 text-primary">
-                    <Star className="w-2.5 h-2.5 mr-0.5" />{b}
-                  </Badge>
-                ))}
+                <Badge variant="outline" className="text-[10px] border-primary/20 text-primary">
+                  <Star className="w-2.5 h-2.5 mr-0.5" />{userLevel}
+                </Badge>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Leaf, LogOut, LayoutDashboard, Rss, Trophy, User } from 'lucide-react';
+import { Menu, X, Leaf, LogOut, LayoutDashboard, Rss, Trophy, User, Shield } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModal from '@/components/modals/AuthModal';
@@ -22,6 +22,8 @@ const NavBar = () => {
   const navigate  = useNavigate();
   const location  = useLocation();
   const { user, profile, signOut } = useAuth();
+  
+  const isAdminUser = profile?.role === 'admin' || user?.email?.toLowerCase() === 'admin@gmail.com';
 
   const handleNav = (route: string) => {
     navigate(route);
@@ -50,7 +52,7 @@ const NavBar = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-primary/10">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
-          <button onClick={() => navigate(user ? '/home' : '/')} className="flex items-center gap-2">
+          <button onClick={() => navigate(isAdminUser ? '/admin/dashboard' : (user ? '/home' : '/'))} className="flex items-center gap-2">
             <Leaf className="w-7 h-7 text-primary" />
             <span className="font-inter font-bold text-lg text-foreground">GreenFeed</span>
           </button>
@@ -81,11 +83,13 @@ const NavBar = () => {
                   </div>
                   <span className="font-medium">{profile?.full_name?.split(' ')[0] ?? 'Profile'}</span>
                 </button>
-                <Button size="sm" variant="outline"
-                  className="border-primary/30 text-primary hover:bg-primary/10"
-                  onClick={() => navigate('/dashboard')}>
-                  <LayoutDashboard className="w-4 h-4 mr-1" /> Dashboard
-                </Button>
+                {isAdminUser && (
+                  <Button size="sm" variant="outline"
+                    className="border-primary/30 text-primary hover:bg-primary/10"
+                    onClick={() => navigate('/admin/dashboard')}>
+                    <Shield className="w-4 h-4 mr-1" /> Admin Panel
+                  </Button>
+                )}
                 <Button size="sm" variant="outline"
                   className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                   onClick={handleSignOut}>
@@ -133,9 +137,11 @@ const NavBar = () => {
                 <Button className="w-full" variant="outline" onClick={() => { navigate('/profile'); setOpen(false); }}>
                   <User className="w-4 h-4 mr-2" /> Profile
                 </Button>
-                <Button className="w-full" variant="outline" onClick={() => { navigate('/dashboard'); setOpen(false); }}>
-                  <LayoutDashboard className="w-4 h-4 mr-2" /> Dashboard
-                </Button>
+                {isAdminUser && (
+                  <Button className="w-full" variant="outline" onClick={() => { navigate('/admin/dashboard'); setOpen(false); }}>
+                    <Shield className="w-4 h-4 mr-2" /> Admin Panel
+                  </Button>
+                )}
                 <Button className="w-full border-red-500/30 text-red-400" variant="outline" onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-2" /> Logout
                 </Button>

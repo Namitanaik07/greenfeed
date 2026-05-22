@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import NavBar from '@/components/NavBar';
 import RewardsSection from '@/components/sections/RewardsSection';
+import PointMatrixSection from '@/components/sections/PointMatrixSection';
 import { Leaf } from 'lucide-react';
 
 const RewardsPage = () => {
@@ -29,6 +30,7 @@ const RewardsPage = () => {
     <div className="min-h-screen pt-16">
       <NavBar />
       <RewardsSection />
+      <PointMatrixSection />
     </div>
   );
 };

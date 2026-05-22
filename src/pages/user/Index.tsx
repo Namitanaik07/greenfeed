@@ -11,17 +11,21 @@ import HowItWorksSection from '@/components/sections/HowItWorksSection';
 import HardwarePhase1Section from '@/components/sections/HardwarePhase1Section';
 import HardwarePhase2Section from '@/components/sections/HardwarePhase2Section';
 import CTASection from '@/components/sections/CTASection';
-import Footer from '@/components/sections/Footer';
+import { Leaf } from 'lucide-react';
 
 const Index = () => {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loading && user) {
-      navigate('/home');
+      if (profile?.role === 'admin' || user.email?.toLowerCase() === 'admin@gmail.com') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/home');
+      }
     }
-  }, [user, loading, navigate]);
+  }, [user, profile, loading, navigate]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -37,7 +41,13 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Leaf className="w-10 h-10 text-primary animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-x-hidden">
@@ -51,7 +61,6 @@ const Index = () => {
       <HardwarePhase1Section />
       <HardwarePhase2Section />
       <CTASection />
-      <Footer />
     </div>
   );
 };

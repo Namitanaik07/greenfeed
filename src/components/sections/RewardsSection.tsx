@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Gift, Star, Trophy, Zap, ExternalLink, ShoppingBag, Plane, Ticket } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { mockUser } from '@/data/mockTasks';
 
 const rewardTiers = [
   {
@@ -46,12 +45,12 @@ function getActiveTier(points: number): number {
 const RewardsSection = () => {
   const { profile } = useAuth();
 
-  // Use real profile data when available, fall back to mock
-  const userPoints = profile?.total_points ?? mockUser.totalPoints;
-  const userTasks = profile?.tasks_completed ?? mockUser.tasksCompleted;
-  const userStreak = profile?.streak_days ?? mockUser.streak;
-  const userImpact = profile?.eco_score ?? mockUser.impactScore;
-  const userLevel = profile?.level ?? mockUser.level;
+  // Use real profile data with sensible defaults
+  const userPoints = profile?.total_points ?? 0;
+  const userTasks = profile?.tasks_completed ?? 0;
+  const userStreak = profile?.streak_days ?? 0;
+  const userImpact = profile?.eco_score ?? 0;
+  const userLevel = profile?.level ?? 'Beginner';
   const userBadges = ['First Action', 'Week Warrior', 'River Saver', 'Tree Planter', '10 Tasks'];
 
   const activeTierIdx = getActiveTier(userPoints);

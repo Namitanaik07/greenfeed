@@ -5,8 +5,13 @@ import { useSmartDustbin } from '@/hooks/useSmartDustbin';
 import NavBar from '@/components/NavBar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { QrCode, Trophy, Flame, Target, TrendingUp, Star, Award, Calendar, Leaf, Shield, BarChart3, RefreshCw } from 'lucide-react';
+import { useUserPosts } from '@/hooks/useFeed';
+import PostCard from '@/components/feed/PostCard';
+import { QrCode, Trophy, Flame, Target, TrendingUp, Star, Award, Calendar, Leaf, Shield, BarChart3, RefreshCw, LogOut, CheckCircle2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { TaskSection } from '@/components/sections/TaskSection';
+import PointMatrixSection from '@/components/sections/PointMatrixSection';
+import { useRef } from 'react';
 
 const tierConfig: Record<string, { label: string; color: string; min: number }> = {
   bronze:   { label: '🥉 Bronze',   color: 'bg-orange-100 text-orange-700 border-orange-300', min: 0 },
@@ -27,13 +32,32 @@ function getTier(points: number) {
 const defaultBadges = ['First Action', 'Week Warrior', 'Eco Starter', 'River Saver'];
 
 const ProfilePage = () => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
-  const { totalPoints: binPoints, totalWeightKg, logs } = useSmartDustbin(user?.id ?? null);
+  const { totalPoints: binPoints, totalWeightKg, logs, latestEvent } = useSmartDustbin(user?.id ?? null);
+  const { posts: userPosts, loading: loadingPosts, toggleLike } = useUserPosts(user?.id);
+
+  const prevEvent = useRef<string | null>(null);
+
+  // 🔔 Show notification when new dustbin event arrives
+  useEffect(() => {
+    if (!latestEvent || latestEvent.id === prevEvent.current) return;
+    prevEvent.current = latestEvent.id;
+    const labels: Record<string, string> = { dry: "📦 Dry", wet: "🍃 Wet", recyclable: "♻️ Recyclable", "e-waste": "🔋 E-Waste" };
+    toast({
+      title: `🗑️ Smart Bin — +${latestEvent.points_awarded} pts!`,
+      description: `${labels[latestEvent.waste_type] ?? latestEvent.waste_type} waste · ${latestEvent.weight_grams}g`,
+    });
+  }, [latestEvent]);
 
   useEffect(() => {
     if (!loading && !user) navigate('/');
   }, [user, loading, navigate]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   if (loading) {
     return (
@@ -79,7 +103,10 @@ const ProfilePage = () => {
                 </Badge>
               </div>
             </div>
-            <div className="text-center">
+            <Button variant="outline" onClick={handleSignOut} className="absolute top-4 right-4 sm:relative sm:top-0 sm:right-0 border-red-500/30 text-red-500 hover:bg-red-500/10">
+              <LogOut className="w-4 h-4 mr-2" /> Logout
+            </Button>
+            <div className="text-center sm:ml-auto">
               <div className="text-4xl font-inter font-black text-primary">{ecoScore}</div>
               <div className="text-xs text-muted-foreground">Eco-Score</div>
             </div>
@@ -203,6 +230,41 @@ const ProfilePage = () => {
             </div>
           </div>
         )}
+
+        {/* Point Matrix & Rewards Dashboard */}
+        <PointMatrixSection />
+
+        {/* Tasks Section */}
+        <div className="mb-8">
+          <TaskSection />
+        </div>
+
+        {/* User Posts Section */}
+        <div className="space-y-6">
+          <h2 className="font-inter font-bold text-2xl text-foreground mb-4">Your Recent Posts</h2>
+          {loadingPosts ? (
+            <div className="flex items-center justify-center py-10">
+              <Leaf className="w-8 h-8 animate-pulse text-primary" />
+            </div>
+          ) : userPosts.length === 0 ? (
+            <div className="glass-card rounded-[16px] p-12 text-center">
+              <Leaf className="w-12 h-12 text-primary/40 mx-auto mb-4" />
+              <p className="text-foreground font-semibold">No posts yet</p>
+              <p className="text-muted-foreground text-sm mt-1">Share your first eco-action in the Community Feed!</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+              {userPosts.map(post => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onLike={toggleLike}
+                  onHashtagClick={(tag) => navigate(`/feed?tag=${tag}`)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -31,14 +31,18 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const { error } = await signIn(loginForm.email, loginForm.password);
+    const { error, profile } = await signIn(loginForm.email, loginForm.password);
     setIsLoading(false);
     if (error) {
       toast({ title: '❌ Login failed', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: '🌱 Welcome back!', description: 'Logged in successfully.' });
       onClose();
-      navigate('/home');
+      if (profile?.role === 'admin' || loginForm.email.toLowerCase() === 'admin@gmail.com') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/home');
+      }
     }
   };
 

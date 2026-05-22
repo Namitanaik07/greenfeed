@@ -6,7 +6,7 @@ import SpotIssuesSection from '@/components/sections/SpotIssuesSection';
 import TakeActionSection from '@/components/sections/TakeActionSection';
 import VerificationSection from '@/components/sections/VerificationSection';
 import RewardsSection from '@/components/sections/RewardsSection';
-import Footer from '@/components/sections/Footer';
+
 import { Leaf } from 'lucide-react';
 
 const Home = () => {
@@ -14,10 +14,14 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/');
+    if (!loading) {
+      if (!user) {
+        navigate('/');
+      } else if (profile?.role === 'admin' || user.email?.toLowerCase() === 'admin@gmail.com') {
+        navigate('/admin/dashboard');
+      }
     }
-  }, [user, loading, navigate]);
+  }, [user, profile, loading, navigate]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -76,7 +80,7 @@ const Home = () => {
       <TakeActionSection />
       <VerificationSection />
       <RewardsSection />
-      <Footer />
+
     </div>
   );
 };
